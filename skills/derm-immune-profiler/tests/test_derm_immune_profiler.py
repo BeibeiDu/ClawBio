@@ -39,10 +39,12 @@ def test_demo_pipeline_writes_contract_outputs(tmp_path):
     assert result["source"]["paper_doi"] == "10.1038/s41467-024-54559-6"
     assert len(result["samples"]) == 3
     assert (tmp_path / "report.md").exists()
+    assert (tmp_path / "report.pdf").exists()
     assert (tmp_path / "result.json").exists()
     assert (tmp_path / "tables" / "module_scores.csv").exists()
     assert (tmp_path / "tables" / "sample_summary.csv").exists()
     assert (tmp_path / "reproducibility" / "commands.sh").exists()
+    assert (tmp_path / "per_sample_reports" / "demo_pso_like_report.pdf").exists()
 
     saved = json.loads((tmp_path / "result.json").read_text())
     assert saved["workflow_state"]["lifecycle"] == "ready"

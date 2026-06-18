@@ -29,6 +29,11 @@ metadata:
       format:
         - md
       description: Markdown immune-module profiling report
+    - name: report_pdf
+      type: file
+      format:
+        - pdf
+      description: Two-page-per-sample PDF report styled after the Gilliet/PersoMed per-sample report
     - name: result
       type: file
       format:
@@ -36,7 +41,8 @@ metadata:
       description: Machine-readable module scores and dominant-module calls
   dependencies:
     python: ">=3.11"
-    packages: []
+    packages:
+      - reportlab>=4.0
   demo_data:
     - path: example_data/demo_expression.csv
       description: Synthetic scaled expression profiles with Th17, Th2, and IFN-dominant examples
@@ -179,7 +185,10 @@ Co-dominant modules are modules above `max(0.7 * dominant_activation, 0.3)`, fol
 ```
 output_directory/
 ├── report.md
+├── report.pdf
 ├── result.json
+├── per_sample_reports/
+│   └── <sample_id>_report.pdf
 ├── tables/
 │   ├── module_scores.csv
 │   └── sample_summary.csv
@@ -191,7 +200,8 @@ output_directory/
 ## Dependencies
 
 **Required**:
-- Python standard library only for the ClawBio scoring wrapper.
+- Python standard library for scoring.
+- `reportlab` >= 4.0 for the Gilliet/PersoMed-style PDF report.
 
 **Upstream reproduction**:
 - The original PersoMed figure-generation workflow uses R packages including tidyverse, limma, edgeR, pheatmap, umap, dendextend, ggridges, RColorBrewer, nanostringr, and EnhancedVolcano.
