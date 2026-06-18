@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "generated_by": "scripts/generate_catalog.py",
-  "skill_count": 87,
+  "skill_count": 88,
   "galaxy_tool_count": 8182,
   "skills": [
     {
@@ -699,6 +699,37 @@
         "interpret DE",
         "volcano summary",
         "gene expression summary"
+      ],
+      "chaining_partners": []
+    },
+    {
+      "name": "derm-immune-profiler",
+      "cli_alias": "derm-immune",
+      "description": "Inflammatory skin disease immune-module profiler based on the PersoMed seven-module transcriptomic cartography from Seremet et al. 2024.",
+      "version": "0.1.0",
+      "status": "planned",
+      "has_script": true,
+      "has_tests": true,
+      "has_demo": true,
+      "demo_command": "python clawbio.py run derm-immune --demo",
+      "dependencies": [
+        "python>=3.11"
+      ],
+      "tags": [
+        "dermatology",
+        "inflammatory skin disease",
+        "immune modules",
+        "transcriptomics",
+        "NanoString",
+        "precision medicine"
+      ],
+      "trigger_keywords": [
+        "derm immune profiler",
+        "inflammatory skin immune modules",
+        "PersoMed",
+        "skin biopsy transcriptomics",
+        "psoriasis atopic dermatitis lupus module",
+        "dermatology precision medicine"
       ],
       "chaining_partners": []
     },
