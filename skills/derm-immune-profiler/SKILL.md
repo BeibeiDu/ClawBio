@@ -119,8 +119,9 @@ When the user asks for derm immune profiling:
 1. **Validate**: Confirm `sample_id` and numeric module-gene columns are present.
 2. **Score**: Compute the mean expression of each immune-module gene set.
 3. **Transform**: Apply `1 / (1 + exp(-3 * (module_mean - threshold)))`.
-4. **Classify supportively**: Report dominant module and co-dominant modules; avoid clinical diagnostic claims.
-5. **Report**: Write markdown, JSON, tables, and reproducibility files.
+4. **Plot public context**: Fit a source-data-derived public UMAP from GSE280220/GSE193068 seven-module scores, project new samples with the fitted UMAP transform, report nearest KNN references, and render public module distributions before sample interpretation.
+5. **Classify supportively**: Report dominant module and co-dominant modules; avoid clinical diagnostic claims.
+6. **Report**: Write markdown, PDF, SVG figures, JSON, tables, and reproducibility files.
 
 ## CLI Reference
 
@@ -142,7 +143,7 @@ To verify the skill works:
 python clawbio.py run derm-immune --demo
 ```
 
-Expected output: a report with three synthetic profiles: Th17-dominant, Th2-dominant, and IFN-dominant.
+Expected output: a report that first plots the public GSE280220/GSE193068 background, then profiles three synthetic examples: Th17-dominant, Th2-dominant, and IFN-dominant.
 
 ## Algorithm / Methodology
 
@@ -163,6 +164,15 @@ The associated code is `derchuv/persomed`, which normalizes NanoString RCC data,
 | IFN | 0.86 | cutaneous-lupus-like / type-I-interferon inflammation |
 
 Co-dominant modules are modules above `max(0.7 * dominant_activation, 0.3)`, following the logic used in the PersoMed Figure 3 analysis code.
+
+The report bundles a compact derived public GEO context table from:
+
+- `GSE280220`: Gilliet/PersoMed inflammatory skin disease atlas
+- `GSE193068`: COVID/CLE skin NanoString context
+
+These public samples are plotted first because the module profile is comparative: a new sample's activation pattern is only meaningful against the inflammatory skin reference space.
+
+The first report figure is not hand-positioned by disease label. Public GEO samples are embedded from their seven immune-module activation vectors with `umap-learn`, and each new input sample is transformed into that public reference space using the fitted UMAP model. The output also writes `tables/embedding_neighbors.csv` so the placement can be audited from nearest public samples in the same standardized seven-module feature space. If `umap-learn` is unavailable, the implementation falls back to a clearly labeled source-data PCA/KNN projection rather than pretending to be UMAP.
 
 ## Example Queries
 
@@ -187,9 +197,15 @@ output_directory/
 ├── report.md
 ├── report.pdf
 ├── result.json
+├── figures/
+│   ├── sentinel_panel_source_embedding.svg
+│   ├── public_geo_dominant_modules.svg
+│   ├── public_geo_module_heatmap.svg
+│   └── input_vs_public_geo_context.svg
 ├── per_sample_reports/
 │   └── <sample_id>_report.pdf
 ├── tables/
+│   ├── embedding_neighbors.csv
 │   ├── module_scores.csv
 │   └── sample_summary.csv
 └── reproducibility/
@@ -201,6 +217,8 @@ output_directory/
 
 **Required**:
 - Python standard library for scoring.
+- `numpy` for source-data embedding calculations.
+- `umap-learn` for the true public-reference UMAP and input-sample transform.
 - `reportlab` >= 4.0 for the Gilliet/PersoMed-style PDF report.
 
 **Upstream reproduction**:

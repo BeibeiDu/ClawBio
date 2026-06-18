@@ -18,6 +18,9 @@ skills/pharmgx-reporter/report/
 skills/genome-compare/data/manuel_corpas_23andme.txt
 skills/pr-audit/
 data/
+!skills/derm-immune-profiler/data/
+!skills/derm-immune-profiler/data/der_signature.csv
+!skills/derm-immune-profiler/data/public_geo_context.csv
 !skills/methylation-clock/data/
 !skills/methylation-clock/data/GSE139307_small.csv.gz
 !skills/rare-disease-rnaseq/data/

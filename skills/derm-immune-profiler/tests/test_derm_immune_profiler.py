@@ -11,6 +11,7 @@ sys.path.insert(0, str(SKILL_DIR))
 from derm_immune_profiler import (  # noqa: E402
     DEMO_EXPRESSION,
     MODULE_ORDER,
+    load_public_context,
     load_signature,
     run_pipeline,
     score_expression_table,
@@ -37,10 +38,19 @@ def test_demo_pipeline_writes_contract_outputs(tmp_path):
     result = run_pipeline(DEMO_EXPRESSION, tmp_path, demo=True)
     assert result["schema"] == "derm_immune_profiler.result.v1"
     assert result["source"]["paper_doi"] == "10.1038/s41467-024-54559-6"
+    assert result["public_geo_context"]["sample_count"] == 295
+    assert result["public_geo_context"]["embedding"]["method"] == "source_data_umap_2d_with_umap_transform_and_knn_neighbors"
+    assert result["public_geo_context"]["embedding"]["features"] == MODULE_ORDER
+    assert len(result["public_geo_context"]["embedding"]["query_projection"]) == 3
     assert len(result["samples"]) == 3
     assert (tmp_path / "report.md").exists()
     assert (tmp_path / "report.pdf").exists()
+    assert (tmp_path / "figures" / "sentinel_panel_source_embedding.svg").exists()
+    assert (tmp_path / "figures" / "public_geo_dominant_modules.svg").exists()
+    assert (tmp_path / "figures" / "public_geo_module_heatmap.svg").exists()
+    assert (tmp_path / "figures" / "input_vs_public_geo_context.svg").exists()
     assert (tmp_path / "result.json").exists()
+    assert (tmp_path / "tables" / "embedding_neighbors.csv").exists()
     assert (tmp_path / "tables" / "module_scores.csv").exists()
     assert (tmp_path / "tables" / "sample_summary.csv").exists()
     assert (tmp_path / "reproducibility" / "commands.sh").exists()
@@ -49,6 +59,17 @@ def test_demo_pipeline_writes_contract_outputs(tmp_path):
     saved = json.loads((tmp_path / "result.json").read_text())
     assert saved["workflow_state"]["lifecycle"] == "ready"
     assert saved["workflow_state"]["state_id"].startswith("sha256:")
+    assert saved["public_geo_context"]["embedding"]["query_projection"][0]["nearest_public_neighbors"]
     report = (tmp_path / "report.md").read_text()
+    assert "Public GEO Background" in report
+    assert "sentinel_panel_source_embedding.svg" in report
+    assert "true source-data UMAP" in report
     assert "research" in report
     assert "not a medical device" in report
+
+
+def test_public_context_loads_geo_background():
+    context = load_public_context()
+    assert len(context) == 295
+    assert {row["source_accession"] for row in context} == {"GSE280220", "GSE193068"}
+    assert any(row["group"] == "COVID skin lesion" for row in context)
