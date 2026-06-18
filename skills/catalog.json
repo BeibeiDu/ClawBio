@@ -713,7 +713,8 @@
       "has_demo": true,
       "demo_command": "python clawbio.py run derm-immune --demo",
       "dependencies": [
-        "python>=3.11"
+        "python>=3.11",
+        "reportlab>=4.0"
       ],
       "tags": [
         "dermatology",
