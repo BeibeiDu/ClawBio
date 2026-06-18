@@ -217,6 +217,7 @@ FOLDER_TO_ALIAS = {
     "marker-dominance-mapper": "marker-map",
     "llm-biobank-bench": "llm-bench",
     "phylogenetics-builder": "phylo",
+    "derm-immune-profiler": "derm-immune",
 }
 
 # Skill folders excluded from the public catalog (local-only / gitignored)

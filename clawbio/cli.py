@@ -1159,6 +1159,13 @@ SKILLS = {
         "no_input_required": True,
         "accepts_genotypes": False,
     },
+    "derm-immune": {
+        "script": SKILLS_DIR / "derm-immune-profiler" / "derm_immune_profiler.py",
+        "demo_args": ["--demo"],
+        "description": "Derm immune profiler — PersoMed inflammatory skin immune-module scoring",
+        "allowed_extra_flags": set(),
+        "accepts_genotypes": False,
+    },
 }
 
 try:
